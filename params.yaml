@@ -1,0 +1,41 @@
+data:
+  raw_train: data/raw/train.csv
+  raw_later: data/raw/later.csv
+  holdout: data/raw/holdout_features.csv
+  cleaned_train: data/processed/train_cleaned.csv
+  findings_path: reports/findings.yaml
+
+cleaning:
+  target_col: grain_kg
+  date_col: date
+  id_col: record_id
+  leaking_columns:
+    - kg_entered_in_epos_at_close
+  unit_mixup:
+    column: stock_kg_morning
+    group_col: block
+    group_value: Block South
+    factor: 1000
+    threshold: 10000.0
+  sentinel:
+    column: biometric_failures
+    value: 9999
+  spelling:
+    column: shop_area
+    mapping:
+      tri.: tribal
+      rur.: rural
+      urb.: urban
+
+model:
+  target: grain_kg
+  random_state: 42
+  features:
+    - cards_attached
+    - working_hours
+    - biometric_failures
+    - temp_c
+    - stock_kg_morning
+    - days_to_month_end
+    - shop_area
+    - block

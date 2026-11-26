@@ -1,0 +1,23 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# MLflow local artifacts (keep mlflow.db tracked when committed)
+mlruns/
+mlartifacts/
+
+# Processed / derived data
+data/processed/
+
+# OS files
+.DS_Store
