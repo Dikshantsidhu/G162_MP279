@@ -30,6 +30,9 @@ cleaning:
 model:
   target: grain_kg
   random_state: 42
+  test_size: 0.2
+  cv_folds: 5
+  artifact_path: models/model.joblib
   features:
     - cards_attached
     - working_hours
@@ -39,3 +42,52 @@ model:
     - days_to_month_end
     - shop_area
     - block
+  numeric_features:
+    - cards_attached
+    - working_hours
+    - biometric_failures
+    - temp_c
+    - stock_kg_morning
+    - days_to_month_end
+  categorical_features:
+    - shop_area
+    - block
+  candidates:
+    - name: ridge_alpha_1
+      type: ridge
+      params:
+        alpha: 1.0
+    - name: ridge_alpha_10
+      type: ridge
+      params:
+        alpha: 10.0
+    - name: poly2_ridge_10
+      type: poly_ridge
+      params:
+        degree: 2
+        alpha: 10.0
+    - name: huber_regressor
+      type: huber
+      params:
+        alpha: 0.0001
+        max_iter: 500
+    - name: gradient_boosting
+      type: gradient_boosting
+      params:
+        n_estimators: 200
+        learning_rate: 0.05
+        max_depth: 3
+    - name: random_forest
+      type: random_forest
+      params:
+        n_estimators: 200
+        max_depth: 12
+
+mlflow:
+  tracking_uri: sqlite:///mlflow.db
+  experiment_name: mp279-ration-distribution
+  registered_model_name: mp279-grain-predictor
+  champion_alias: champion
+
+prediction:
+  output_path: predictions/holdout_predictions.csv
