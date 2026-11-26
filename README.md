@@ -13,7 +13,7 @@ SCSE3040 MLOps Mini Project for the **Surat Food and Civil Supplies Office** —
 | Enrolment No. | Name / GitHub Handle | Role |
 |---|---|---|
 | `S24CSEU0861` | DIKSHANT. (`Dikshantsidhu`) | Data Lead |
-| `S24CSEU0946` | vanshdhingra | Team Member |
+| `S24CSEU0946` | vanshdhingra | Model Lead |
 | `S24CSEU0890` | BhaveshUpadhyay | Team Member |
 | `S24CSEU0758` | HIMANSHUYADAV | Team Member |
 
@@ -33,13 +33,21 @@ SCSE3040 MLOps Mini Project for the **Surat Food and Civil Supplies Office** —
 │       ├── __init__.py
 │       ├── config.py              # Loads params.yaml via yaml.safe_load
 │       ├── data_checks.py         # Automated detection of the 7 data issues
-│       └── cleaning.py            # Reproducible data cleaning pipeline
+│       ├── cleaning.py            # Reproducible data cleaning pipeline
+│       ├── train.py               # Model training, MLflow tracking & registry
+│       └── predict.py             # Holdout predictions using @champion
 ├── tests/
 │   ├── test_data_checks.py
-│   └── test_cleaning.py
+│   ├── test_cleaning.py
+│   ├── test_training.py
+│   └── test_predict.py
+├── models/
+│   └── model.joblib               # Exported @champion model artifact
+├── mlflow.db                      # MLflow tracking & model registry SQLite DB
 ├── reports/
 │   └── findings.yaml              # Structured findings for marking
 └── predictions/
+    └── holdout_predictions.csv    # Holdout predictions (record_id,prediction)
 ```
 
 ## Setup & Usage (Data Pipeline)
@@ -69,4 +77,16 @@ SCSE3040 MLOps Mini Project for the **Surat Food and Civil Supplies Office** —
 5. Run unit tests (uses synthetic in-memory DataFrames; does not require raw CSVs):
    ```bash
    PYTHONPATH=src pytest -v
+   ```
+
+## Setup & Usage (Model Pipeline)
+
+1. Train candidate models, log all runs to `mlflow.db`, register v1 with alias `@champion`, and export `models/model.joblib`:
+   ```bash
+   PYTHONPATH=src python -m mp279.train
+   ```
+
+2. Generate `predictions/holdout_predictions.csv` using the registered `@champion` model:
+   ```bash
+   PYTHONPATH=src python -m mp279.predict
    ```
